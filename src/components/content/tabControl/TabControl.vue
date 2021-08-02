@@ -16,6 +16,8 @@ export default {
   }, methods: {
     itemClick(index) {
       this.currentIndex = index
+      /*将当前索引传给Home组件，切换分类数据*/
+      this.$emit('tabClick',index)
     }
   },
   props: {
