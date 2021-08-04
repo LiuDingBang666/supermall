@@ -23,7 +23,7 @@ export default {
     }, pullUpLoad: {
       type: Boolean,
       default: false
-    }
+    },
   }, mounted() {
     //1、创建BScroll对象
     this.scroll = new Bscroll(this.$refs.wrapper, {
@@ -38,16 +38,18 @@ export default {
       this.$emit('scroll', position)
     })
 
-    //3、监听上拉事件
+    // 3、监听scroll滚动到底部
     this.scroll.on('pullingUp', () => {
-      this.$emit('pullingUp')
-
+      this.$emit('loadMore')
     })
+    // this.scroll.refresh();
   }, methods: {
     scrollTo(x, y, time = 500) {
-      this.scroll.scrollTo(x, y, time)
+      this.scroll && this.scroll.scrollTo(x, y, time)
     }, finishPullUp() {
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
+    }, refresh() {
+      this.scroll && this.scroll.refresh()
     }
   }
 }

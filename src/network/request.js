@@ -13,14 +13,12 @@ export function request(config) {
   //2、axios的拦截器
   //拦截请求
   instance.interceptors.request.use(config => {
-    // console.log(config);
     return config;
   }, err => {
     console.log(err);
   });
   //拦截响应
   instance.interceptors.response.use(res => {
-    // console.log(res);
     return res.data;
   }, err => {
     console.log(err);
