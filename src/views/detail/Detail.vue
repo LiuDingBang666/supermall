@@ -11,7 +11,7 @@
       <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addToCart="addToCart"/>
   </div>
 </template>
 
@@ -123,14 +123,11 @@ export default {
     imageLoad() {
       this.$refs.scroll.refresh();
       this.getThemeTopy()
-      console.log(this.themeTopYs);
     }
     ,
     contentScroll(position) {
       //1、判断BackTop是否显示 内容滚动
       this.isShowBackTop = -position.y > 1000;
-
-
       //2、判断当前滚动位置，并更新当前滚动的标题
       const positionY = -position.y;
       let length = this.themeTopYs.length
@@ -149,6 +146,19 @@ export default {
       //1、根据当前index，滚动到指定板块的y值
       //2、监听滚动，根据当前位置设置
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 500)
+    },
+    addToCart() {
+      //1.获取购物车需要展示的信息
+      const product = {}
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.nowPrice;
+      product.iid = this.iid;
+      //  2.将商品添加到购物车
+      // this.$store.commit('addCart', product)
+      this.$store.dispatch('addCart', product)
+      console.log(this.$store.state.cartList);
     }
   },
 

@@ -49,7 +49,7 @@ export default {
   display: flex;
 }
 
-.bar-item>div {
+.bar-item > div {
   flex: 1;
 }
 
@@ -66,11 +66,11 @@ export default {
 }
 
 .bar-left .service {
-  background-position:0 -54px;
+  background-position: 0 -54px;
 }
 
 .bar-left .shop {
-  background-position:0 -98px;
+  background-position: 0 -98px;
 }
 
 .bar-right {
