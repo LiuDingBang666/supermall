@@ -29,12 +29,12 @@ export default {
     }
   }, methods: {
     imageLoad() {
-      this.$bus.$emit('itemImageLoad')
-      /*if (this.$route.path.indexOf('/home')) {
+      // this.$bus.$emit('itemImageLoad')
+      if (this.$route.path.indexOf('/home') != -1) {
         this.$bus.$emit('itemImageLoad')
-      }else if (this.$route.path.indexOf('/detail')) {
+      } else if (this.$route.path.indexOf('/detail')!= -1) {
         this.$bus.$emit('detailImageLoad')
-      }*/
+      }
 
     }, itemClick(id) {
       this.$router.push('/detail/' + id)

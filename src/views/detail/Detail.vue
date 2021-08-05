@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="detail-nav"/>
-    <scroll class="content" ref="scroll">
+    <scroll @scroll="contentScroll" :probe-type="3" class="content" ref="scroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shopInfo"/>
@@ -11,7 +11,7 @@
       <detail-recommend :recommends="recommends"/>
       <goods-list :goods="recommends"/>
     </scroll>
-
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -30,7 +30,9 @@ import DetailParamInfo from "./childCompos/DetailParamInfo";
 import DetailCommentInfo from "./childCompos/DetailCommentInfo";
 import DetailRecommend from "./childCompos/DetailRecommend";
 import GoodsList from "../../components/content/goods/GoodsList";
-import {itemListerenMixin} from "common/mixin";
+import BackTop from "../../components/content/backTop/BackTop";
+
+import {debounce} from "../../common/utils";
 
 
 export default {
@@ -44,9 +46,9 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommends: [],
-
+      isShowBackTop: false,
     }
-  }, mixins: [itemListerenMixin],
+  }, /*mixins: [itemListerenMixin],*/
   created() {
     //1.保存传入的iid
     this.iid = this.$route.params.iid;
@@ -80,15 +82,23 @@ export default {
     Scroll,
     DetailGoodsInfo,
     DetailParamInfo,
-    DetailCommentInfo, DetailRecommend, GoodsList
+    DetailCommentInfo, DetailRecommend, GoodsList, BackTop
   }, methods: {
     imageLoad() {
       this.$refs.scroll.refresh();
+    }, backClick() {
+      /*跳转到顶部*/
+      console.log('跳转到顶部');
+      this.$refs.scroll.scrollTo(0, 0, null)
+    }, contentScroll(position) {
+      //1、判断BackTop是否显示 内容滚动
+      this.isShowBackTop = -position.y > 1000;
     }
   }, mounted() {
-
-  }, destroyed() {
-    this.$bus.$off('itemImageLoad', this.itemImgListener)
+    const refresh = debounce(this.$refs.scroll.refresh, 100)
+    this.$bus.$on('detailImageLoad', () => {
+      refresh();
+    })
   }
 }
 </script>

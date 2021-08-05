@@ -36,6 +36,7 @@ import FeatureView from "./childComps/FeatureView";
 import {
   getHomeMultidata, getHomeGoods
 } from "network/home";
+import {debounce} from "../../common/utils";
 
 
 /*BSscroll*/
@@ -46,7 +47,7 @@ export default {
     showGoods() {
       return this.goods[this.currentType].list;
     }
-  }, mixins: [itemListerenMixin],
+  }, /*mixins: [itemListerenMixin],*/
   components: {
     NavBar,
     HomeSwiper,
@@ -63,9 +64,6 @@ export default {
 
     this.getHomeGoods('sell')
 
-
-  },
-  mounted() {
 
   },
   data() {
@@ -135,9 +133,11 @@ export default {
 
   }, activated() {
 
-  }, deactivated() {
-    //  取消全局事件的监听
-    this.$bus.$off(itemImageLoad, this.itemImgListener);
+  }, mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 100)
+    this.$bus.$on('itemImageLoad', () => {
+      refresh();
+    })
   }
 }
 </script>
