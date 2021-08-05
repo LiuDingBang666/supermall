@@ -20,15 +20,21 @@ export default {
   name: "DetailNavBar",
   components: {
     NavBar
-  }, data() {
+  },
+  props: {
+
+  },
+  data() {
     return {
       titles: ['商品', '参数', '评论', '推荐'],
       currentIndex: 0,
     }
-  }, methods: {
+  },
+  methods: {
     titleClick(index) {
       this.currentIndex = index;
-    },backClick(){
+      this.$emit('titleClick', index)
+    }, backClick() {
       this.$router.back()
     }
   }
@@ -48,7 +54,7 @@ export default {
   color: red;
 }
 
-.back{
+.back {
   margin: 5px;
 }
 </style>
