@@ -1,22 +1,22 @@
 <template>
 
   <div id="home">
-      <nav-bar class="home-nav">
-        <div slot="center">购物街</div>
-      </nav-bar>
-      <tab-control v-show="isTabFixed" class="tab-control" :titles=" ['流行', '新款', '精选']" @tabClick="tabClick"
-                   ref="tabControl1"/>
-      <scroll class="content" @scroll="contentScroll" @loadMore="loadMore" :pull-up-load="true" :probe-type="3"
-              ref="scroll"
-      >
-        <home-swiper @swiperImageLoad="swiperImageLoad" :banners="banners"/>
-        <recommend-view :recommends="recommends"/>
-        <feature-view/>
-        <tab-control :titles=" ['流行', '新款', '精选']" @tabClick="tabClick"
-                     ref="tabControl2"/>
-        <goods-list :goods="showGoods"></goods-list>
-      </scroll>
-      <back-top @click.native="backClick" v-show="isShowBackTop"/>
+    <nav-bar class="home-nav">
+      <div slot="center">购物街</div>
+    </nav-bar>
+    <tab-control v-show="isTabFixed" class="tab-control" :titles=" ['流行', '新款', '精选']" @tabClick="tabClick"
+                 ref="tabControl1"/>
+    <scroll class="content" @scroll="contentScroll" @loadMore="loadMore" :pull-up-load="true" :probe-type="3"
+            ref="scroll"
+    >
+      <home-swiper @swiperImageLoad="swiperImageLoad" :banners="banners"/>
+      <recommend-view :recommends="recommends"/>
+      <feature-view/>
+      <tab-control :titles=" ['流行', '新款', '精选']" @tabClick="tabClick"
+                   ref="tabControl2"/>
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -28,6 +28,7 @@ import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backTop/BackTop";
+import {itemListerenMixin} from "../../common/mixin";
 
 /*单独组件*/
 import RecommendView from "./childComps/RecommendView";
@@ -35,7 +36,6 @@ import FeatureView from "./childComps/FeatureView";
 import {
   getHomeMultidata, getHomeGoods
 } from "network/home";
-import {debounce} from "common/utils";
 
 
 /*BSscroll*/
@@ -46,7 +46,7 @@ export default {
     showGoods() {
       return this.goods[this.currentType].list;
     }
-  },
+  }, mixins: [itemListerenMixin],
   components: {
     NavBar,
     HomeSwiper,
@@ -66,12 +66,7 @@ export default {
 
   },
   mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh, 500)
-    // 1、监听item中图片加载完成
-    this.$bus.$on('itemImageLoad', () => {
-      // this.$refs.scroll.refresh()
-      refresh();
-    })
+
   },
   data() {
     return {
@@ -86,7 +81,8 @@ export default {
       currentType: 'pop',
       types: ['pop', 'new', 'sell'],
       tabOffsetTop: 0,
-      isTabFixed: false
+      isTabFixed: false,
+
     }
   },
   methods: {
@@ -137,6 +133,11 @@ export default {
       })
     }
 
+  }, activated() {
+
+  }, deactivated() {
+    //  取消全局事件的监听
+    this.$bus.$off(itemImageLoad, this.itemImgListener);
   }
 }
 </script>

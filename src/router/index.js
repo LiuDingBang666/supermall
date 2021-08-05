@@ -6,6 +6,14 @@ const Cart = () => import('../views/cart/Cart')
 const Category = () => import('../views/category/Category')
 const Profile = () => import('../views/profile/Profile')
 const Detail = () => import('../views/detail/Detail')
+
+//设置组件自行跳转不报错，捕获异常
+//获取原型对象上的push函数
+/*const originalPush = VueRouter.prototype.push
+//修改原型对象中的push方法
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}*/
 Vue.use(VueRouter)
 
 const routes = [

@@ -22,7 +22,7 @@ export default {
       default: 0
     }, pullUpLoad: {
       type: Boolean,
-      default: false
+      default: true
     },
   }, mounted() {
     //1、创建BScroll对象
